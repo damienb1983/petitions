@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Petitions Home</title>
+</head>
+<body>
+<h1 th:text="${message}">Default Message</h1>
+
+<h2>Petitions:</h2>
+<ul>
+  <li th:each="petition : ${petitions}" th:text="${petition}">Sample Petition</li>
+</ul>
+</body>
+</html>
