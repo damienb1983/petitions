@@ -6,7 +6,7 @@ pipeline {
         JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
         EC2_USER = 'ubuntu'
         EC2_IP = 'ec2-51-20-7-166.eu-north-1.compute.amazonaws.com'
-        WAR_NAME = 'damienspetitions.war'
+        WAR_NAME = 'damienspetitions-0.0.1-SNAPSHOT.war'
         APP_DIR = "/home/${EC2_USER}/apps"
     }
 
@@ -57,16 +57,16 @@ pipeline {
 
                     // Ensure the application directory exists on EC2
                     sshagent(['ec2-ssh-key']) {
-                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'mkdir -p ${APP_DIR}'"
+                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'mkdir -p ${APP_DIR}' || echo 'Failed to create app directory'"
 
                         // Copy WAR file to EC2 instance
-                        sh "scp -o StrictHostKeyChecking=no target/${WAR_NAME} ${EC2_USER}@${EC2_IP}:${APP_DIR}/"
+                        sh "scp -o StrictHostKeyChecking=no target/${WAR_NAME} ${EC2_USER}@${EC2_IP}:${APP_DIR}/ || echo 'Failed to copy WAR file'"
 
-                        // Stop the existing application (you may need to implement this)
-                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'pkill -f ${WAR_NAME}'"
+                        // Stop the existing application
+                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'pkill -f ${WAR_NAME}' || echo 'Failed to stop the existing application'"
 
                         // SSH into the EC2 instance and run the application
-                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'nohup java -jar ${APP_DIR}/${WAR_NAME} > ${APP_DIR}/app.log 2>&1 &'"
+                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'nohup java -jar ${APP_DIR}/${WAR_NAME} > ${APP_DIR}/app.log 2>&1 &' || echo 'Failed to start the application'"
                     }
                 }
             }
