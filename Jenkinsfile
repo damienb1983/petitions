@@ -5,9 +5,9 @@ pipeline {
         MAVEN_HOME = "/usr/share/maven"
         JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
         EC2_USER = 'ubuntu'
-        EC2_IP = '51.20.7.166'
-        KEY_PATH = '/Users/damienbarrett/Downloads/AmazonEc2.pem'
+        EC2_IP = 'ec2-51-20-7-166.eu-north-1.compute.amazonaws.com'
         WAR_NAME = 'damienspetitions.war'
+        APP_DIR = "/home/${EC2_USER}/apps"
     }
 
     stages {
@@ -55,11 +55,19 @@ pipeline {
                 script {
                     echo "Deploying the application to EC2..."
 
-                    // Copy WAR file to EC2 instance
-                    sh "scp -i ${KEY_PATH} target/${WAR_NAME} ${EC2_USER}@${EC2_IP}:/home/${EC2_USER}/apps/"
+                    // Ensure the application directory exists on EC2
+                    sshagent(['ec2-ssh-key']) {
+                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'mkdir -p ${APP_DIR}'"
 
-                    // SSH into the EC2 instance and run the application
-                    sh "ssh -i ${KEY_PATH} ${EC2_USER}@${EC2_IP} 'nohup java -jar /home/${EC2_USER}/${WAR_NAME} > /home/${EC2_USER}/app.log 2>&1 &'"
+                        // Copy WAR file to EC2 instance
+                        sh "scp -o StrictHostKeyChecking=no target/${WAR_NAME} ${EC2_USER}@${EC2_IP}:${APP_DIR}/"
+
+                        // Stop the existing application (you may need to implement this)
+                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'pkill -f ${WAR_NAME}'"
+
+                        // SSH into the EC2 instance and run the application
+                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'nohup java -jar ${APP_DIR}/${WAR_NAME} > ${APP_DIR}/app.log 2>&1 &'"
+                    }
                 }
             }
         }
