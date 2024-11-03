@@ -45,6 +45,7 @@ pipeline {
                 script {
                     echo "Packaging the application..."
                     sh "${MAVEN_HOME}/bin/mvn package"
+                    sh "ls -l target/${WAR_NAME}"
                 }
             }
         }
@@ -55,7 +56,7 @@ pipeline {
                     echo "Deploying the application to EC2..."
 
                     // Copy WAR file to EC2 instance
-                    sh "scp -i ${KEY_PATH} target/${WAR_NAME} ${EC2_USER}@${EC2_IP}:/home/${EC2_USER}/"
+                    sh "scp -i ${KEY_PATH} target/${WAR_NAME} ${EC2_USER}@${EC2_IP}:/home/${EC2_USER}/apps/"
 
                     // SSH into the EC2 instance and run the application
                     sh "ssh -i ${KEY_PATH} ${EC2_USER}@${EC2_IP} 'nohup java -jar /home/${EC2_USER}/${WAR_NAME} > /home/${EC2_USER}/app.log 2>&1 &'"
