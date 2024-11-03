@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>View Petitions</title>
+</head>
+<body>
+<h1>All Petitions</h1>
+<ul>
+  <li th:each="petition : ${petitions}">
+    <!-- Corrected syntax for th:href to pass petition title as URL variable -->
+    <a th:href="@{'/view-petition/' + ${petition.title}}">[[${petition.title}]]</a> - Signatures: [[${petition.signatures}]]
+  </li>
+</ul>
+<a href="/create-petition">Create a Petition</a>
+<a href="/search-petition">Search for a Petition</a>
+</body>
+</html>
+

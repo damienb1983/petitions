@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Petitions Home</title>
+  <meta charset="UTF-8">
+  <title>Petition Home</title>
 </head>
 <body>
-<h1 th:text="${message}">Default Message</h1>
-
-<h2>Petitions:</h2>
-<ul>
-  <li th:each="petition : ${petitions}" th:text="${petition}">Sample Petition</li>
-</ul>
+<h1>Welcome to Damiens Petitions</h1>
+<a th:href="@{/view-petitions}">View All Petitions</a>
+<br>
+<a th:href="@{/create-petition}">Create a New Petition</a>
 </body>
 </html>

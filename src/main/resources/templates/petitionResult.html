@@ -1,0 +1,26 @@
+<!-- src/main/resources/templates/petitionResult.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Petition Result</title>
+</head>
+<body>
+<h1>Petition Details</h1>
+<div th:if="${petition}">
+  <h2 th:text="${petition.title}"></h2>
+  <p th:text="${petition.description}"></p>
+  <p>Signatures: <span th:text="${petition.signatures}"></span></p>
+  <form action="#" th:action="@{/sign-petition}" method="post">
+    <input type="hidden" name="title" th:value="${petition.title}" />
+    <input type="text" name="name" placeholder="Your Name" required />
+    <input type="email" name="email" placeholder="Your Email" required />
+    <button type="submit">Sign Petition</button>
+  </form>
+</div>
+<div th:if="${petition == null}">
+  <p>Petition not found.</p>
+</div>
+<a href="/view-petitions">View All Petitions</a>
+<a href="/search-petition">Search for Another Petition</a>
+</body>
+</html>

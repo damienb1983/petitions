@@ -1,0 +1,20 @@
+<!-- src/main/resources/templates/viewPetition.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Petition</title>
+</head>
+<body>
+<h1 th:text="${petition.title}">Petition Title</h1>
+<p th:text="${petition.description}">Petition Description</p>
+<p>Signatures: <span th:text="${petition.signatures}">0</span></p>
+
+<form action="/sign-petition" method="post">
+    <input type="hidden" name="title" th:value="${petition.title}" />
+    <button type="submit">Sign this Petition</button>
+</form>
+
+<a href="/view-petitions">Back to all petitions</a>
+</body>
+</html>
