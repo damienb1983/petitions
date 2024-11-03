@@ -1,2 +1,2 @@
 # petitions
-A web application for creating, viewing, and signing petitions
+A new web application for creating, viewing, and signing petitions
