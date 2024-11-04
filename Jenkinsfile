@@ -18,13 +18,25 @@ pipeline {
             }
         }
 
+         stage('Check WAR File') {
+             steps {
+                 sh 'ls -l target/'
+             }
+         }
+
         stage('Build Docker Image') {
-            steps {
+              steps {
                 script {
                     sh 'docker build -f Dockerfile -t ${DOCKER_IMAGE} .'
                 }
             }
         }
+
+        stage('List Docker Images') {
+              steps {
+                 sh 'docker images' // List Docker images to check if the image was created
+                    }
+                }
 
         stage('Deploy to Docker') {
             steps {
