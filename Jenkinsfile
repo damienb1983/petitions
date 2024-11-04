@@ -6,8 +6,9 @@ pipeline {
         JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
         EC2_USER = 'ubuntu'
         EC2_IP = 'ec2-51-20-7-166.eu-north-1.compute.amazonaws.com'
-        WAR_NAME = 'damienspetitions-0.0.1-SNAPSHOT.war'
-        APP_DIR = "/home/${EC2_USER}/apps"
+        DOCKER_IMAGE = 'damienspetitions'
+        CONTAINER_NAME = 'damienspetitions-container'
+        WAR_NAME = 'damienspetitions.war'
     }
 
     stages {
@@ -44,29 +45,33 @@ pipeline {
             steps {
                 script {
                     echo "Packaging the application..."
-                    sh "${MAVEN_HOME}/bin/mvn package"
-                    sh "ls -l target/${WAR_NAME}"
+                    sh "${MAVEN_HOME}/bin/mvn package -DskipTests"
+                    sh "mv target/*.war target/${WAR_NAME}"
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Deploying the application to EC2..."
+                    echo "Building Docker image..."
+                    sh "docker build -t ${DOCKER_IMAGE}:latest ."
+                }
+            }
+        }
 
-                    // Ensure the application directory exists on EC2
+        stage('Deploy to EC2') {
+            steps {
+                script {
+                    echo "Deploying Docker container to EC2..."
+
                     sshagent(['ec2-ssh-key']) {
-                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'mkdir -p ${APP_DIR}' || echo 'Failed to create app directory'"
-
-                        // Copy WAR file to EC2 instance
-                        sh "scp -o StrictHostKeyChecking=no target/${WAR_NAME} ${EC2_USER}@${EC2_IP}:${APP_DIR}/ || echo 'Failed to copy WAR file'"
-
-                        // Stop the existing application
-                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'pkill -f ${WAR_NAME}' || echo 'Failed to stop the existing application'"
-
-                        // SSH into the EC2 instance and run the application
-                        sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'nohup java -jar ${APP_DIR}/${WAR_NAME} > ${APP_DIR}/app.log 2>&1 &' || echo 'Failed to start the application'"
+                        sh """
+                            ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} << EOF
+                                docker rm -f ${CONTAINER_NAME} || true
+                                docker run -d --name ${CONTAINER_NAME} -p 8081:8080 ${DOCKER_IMAGE}:latest
+                            EOF
+                        """
                     }
                 }
             }
@@ -75,10 +80,10 @@ pipeline {
 
     post {
         success {
-            echo 'Build succeeded!'
+            echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Build failed!'
+            echo 'Pipeline failed!'
         }
     }
 }

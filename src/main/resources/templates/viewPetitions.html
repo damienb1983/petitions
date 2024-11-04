@@ -2,17 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>View Petitions</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-<h1>All Petitions</h1>
-<ul>
-  <li th:each="petition : ${petitions}">
-    <!-- Corrected syntax for th:href to pass petition title as URL variable -->
-    <a th:href="@{'/view-petition/' + ${petition.title}}">[[${petition.title}]]</a> - Signatures: [[${petition.signatures}]]
+<body class="container mt-5">
+<h1 class="text-center">All Petitions</h1>
+<ul class="list-group mt-4">
+  <li class="list-group-item" th:each="petition : ${petitions}">
+    <a th:href="@{'/view-petition/' + ${petition.title}}" class="text-decoration-none">
+      <strong th:text="${petition.title}"></strong>
+    </a> - Signatures: <span th:text="${petition.signatures}">0</span>
   </li>
 </ul>
-<a href="/create-petition">Create a Petition</a>
-<a href="/search-petition">Search for a Petition</a>
+<div class="text-center mt-4">
+  <a href="/" class="btn btn-link">Home</a>
+  <a href="/create-petition" class="btn btn-primary">Create a Petition</a>
+  <a href="/search-petition" class="btn btn-secondary">Search for a Petition</a>
+</div>
 </body>
 </html>
-

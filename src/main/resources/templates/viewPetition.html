@@ -1,20 +1,21 @@
-<!-- src/main/resources/templates/viewPetition.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>View Petition</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-<h1 th:text="${petition.title}">Petition Title</h1>
-<p th:text="${petition.description}">Petition Description</p>
-<p>Signatures: <span th:text="${petition.signatures}">0</span></p>
-
-<form action="/sign-petition" method="post">
+<body class="container mt-5">
+<h1 th:text="${petition.title}" class="text-center text-primary">Petition Title</h1>
+<p th:text="${petition.description}" class="text-center mt-3">Petition Description</p>
+<p class="text-center">Signatures: <span th:text="${petition.signatures}">0</span></p>
+<form action="/sign-petition" method="post" class="text-center mt-3">
     <input type="hidden" name="title" th:value="${petition.title}" />
-    <button type="submit">Sign this Petition</button>
+    <button type="submit" class="btn btn-primary">Sign this Petition</button>
 </form>
-
-<a href="/view-petitions">Back to all petitions</a>
+<div class="text-center mt-3">
+    <a href="/" class="btn btn-link">Home</a>
+    <a href="/view-petitions" class="btn btn-link">Back to all petitions</a>
+</div>
 </body>
 </html>

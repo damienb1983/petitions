@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Petition Home</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-<h1>Welcome to Damiens Petitions</h1>
-<a th:href="@{/view-petitions}">View All Petitions</a>
-<br>
-<a th:href="@{/create-petition}">Create a New Petition</a>
+<body class="container mt-5">
+<h1 class="text-center">Welcome to Damiens Petitions</h1>
+<div class="text-center mt-4">
+  <a th:href="@{/view-petitions}" class="btn btn-primary">View All Petitions</a>
+  <a th:href="@{/create-petition}" class="btn btn-secondary">Create a New Petition</a>
+</div>
 </body>
 </html>

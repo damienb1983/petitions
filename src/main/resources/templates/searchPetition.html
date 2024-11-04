@@ -1,15 +1,18 @@
-<!-- src/main/resources/templates/searchPetition.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Search for a Petition</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-<h1>Search for a Petition</h1>
-<form action="#" th:action="@{/search-petition}" method="post">
-  <input type="text" name="title" placeholder="Petition Title" required />
-  <button type="submit">Search</button>
+<body class="container mt-5">
+<h1 class="text-center">Search for a Petition</h1>
+<form action="#" th:action="@{/search-petition}" method="post" class="form-inline justify-content-center mt-4">
+  <input type="text" class="form-control mr-2" name="title" placeholder="Petition Title" required />
+  <button type="submit" class="btn btn-primary">Search</button>
 </form>
-<a href="/view-petitions">View All Petitions</a>
+<div class="text-center mt-3">
+  <a href="/" class="btn btn-link">Home</a>
+  <a href="/view-petitions" class="btn btn-link">View All Petitions</a>
+</div>
 </body>
 </html>
