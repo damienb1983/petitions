@@ -45,7 +45,7 @@ public class PetitionController {
     public String viewPetition(@PathVariable String petitionName, Model model) {
         Petition petition = petitionService.getPetitionByTitle(petitionName);
         model.addAttribute("petition", petition);
-        return "viewPetition";  // Assumes viewPetition.html exists and expects a "petition" model attribute
+        return "viewPetition";
     }
 
 

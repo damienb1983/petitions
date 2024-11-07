@@ -9,13 +9,13 @@
 <h1 th:text="${petition.title}" class="text-center text-primary">Petition Title</h1>
 <p th:text="${petition.description}" class="text-center mt-3">Petition Description</p>
 <p class="text-center">Signatures: <span th:text="${petition.signatures}">0</span></p>
-<form action="/sign-petition" method="post" class="text-center mt-3">
+<form th:action="@{/search-petition}" method="post" class="text-center mt-3">
     <input type="hidden" name="title" th:value="${petition.title}" />
     <button type="submit" class="btn btn-primary">Sign this Petition</button>
 </form>
 <div class="text-center mt-3">
-    <a href="/" class="btn btn-link">Home</a>
-    <a href="/view-petitions" class="btn btn-link">Back to all petitions</a>
+    <a th:href="@{/}" class="btn btn-link">Home</a>
+    <a th:href="@{/view-petitions}" class="btn btn-primary">Search for a Petition</a>
 </div>
 </body>
 </html>
